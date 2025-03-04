@@ -77,8 +77,7 @@ function extractFromAgent(url) {
     match = url.match(/url=([^&]*)/);
     let decodedLink = decodeURIComponent(match[1]);
     if (decodedLink.includes("weidian.com")) {
-      match = decodedLink.match(/itemID|itemId=(\d+)/);
-      platform = "weidian";
+      match = decodedLink.match(/(?:itemID|itemId)=(\d+)/);
     } else if (decodedLink.includes("taobao.com")) {
       match = decodedLink.match(/id=(\d+)/);
       platform = "taobao";

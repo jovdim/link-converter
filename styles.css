@@ -1,0 +1,51 @@
+/* body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+}
+
+input {
+  width: 80%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+}
+
+button {
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 12px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.link-style {
+  display: inline-block;
+  max-width: 400px;
+  overflow: scroll;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.copy-btn {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+} */

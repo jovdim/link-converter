@@ -1,83 +1,167 @@
-const affiliateCodes = {
-  AllChinaBuy: "&partnercode=wrf7xD",
-  AcBuy: "&u=9MLILB",
-  CNFans: "&ref=71427",
-  OrientDig: "&ref=100005658",
-  Sugargoo: "&memberId=341947205705269884",
-};
+document.getElementById("convertBtn").addEventListener("click", convertLink);
 
-const agents = [
-  {
-    name: "AllChinaBuy",
-    generateLink: (rawLink, itemId, storeType) =>
-      `https://www.allchinabuy.com/en/page/buy?from=search-input&url=${encodeURIComponent(
-        rawLink
-      )}${affiliateCodes.AllChinaBuy}`,
-  },
-  {
-    name: "AcBuy",
-    generateLink: (rawLink, itemId, storeType) =>
-      `https://www.acbuy.com/product/?id=${itemId}&source=${
-        storeType === "weidian" ? "WD" : storeType === "ali_1688" ? "AL" : "TB"
-      }${affiliateCodes.AcBuy}`,
-  },
-  {
-    name: "CNFans",
-    generateLink: (rawLink, itemId, storeType) =>
-      `https://cnfans.com/product/?shop_type=${storeType}&id=${itemId}${affiliateCodes.CNFans}`,
-  },
-  {
-    name: "OrientDig",
-    generateLink: (rawLink, itemId, storeType) =>
-      `https://orientdig.com/product/?shop_type=${storeType}&id=${itemId}${affiliateCodes.OrientDig}`,
-  },
-  {
-    name: "Sugargoo",
-    generateLink: (rawLink, itemId, storeType) =>
-      `https://www.sugargoo.com/#/home/productDetail?productLink=${encodeURIComponent(
-        rawLink
-      )}${affiliateCodes.Sugargoo}`,
-  },
-];
+function extractProductID(url) {
+  let match, platform, rawLink;
 
-function extractItemId(url) {
-  let match = url.match(/itemID=(\d+)|offer\/(\d+)\.html|id=(\d+)/);
-  return match ? match[1] || match[2] || match[3] : null;
+  if (url.includes("taobao.com/item.") || url.includes("tmall.com")) {
+    match = url.match(/id=(\d+)/);
+    platform = "taobao";
+    rawLink = `https://item.taobao.com/item.htm?id=${match[1]}`;
+  } else if (url.includes("weidian.com/item")) {
+    match = url.match(/itemID=(\d+)/);
+    platform = "weidian";
+    rawLink = `https://weidian.com/item.html?itemID=${match[1]}`;
+  } else if (url.includes("1688.com/offer")) {
+    match = url.match(/offer\/(\d+)\.html/);
+    platform = "1688";
+    rawLink = `https://detail.1688.com/offer/${match[1]}.html`;
+  }
+
+  // Detect agent links
+  else if (
+    url.includes("acbuy.com") ||
+    url.includes("cnfans.com") ||
+    url.includes("orientdig.com") ||
+    url.includes("sugargoo.com") ||
+    url.includes("allchinabuy.com")
+  ) {
+    return extractFromAgent(url);
+  }
+
+  return match
+    ? { id: match[1], platform: platform, rawLink: rawLink }
+    : { id: null, platform: null, rawLink: null };
 }
 
-function getStoreType(url) {
-  if (url.includes("weidian.com")) return "weidian";
-  if (url.includes("1688.com")) return "ali_1688";
-  if (url.includes("taobao.com")) return "taobao";
-  return null;
+function extractFromAgent(url) {
+  let match, platform, id, rawLink;
+
+  if (url.includes("acbuy.com")) {
+    match = url.match(/id=(\d+)/);
+    platform = url.includes("source=TB")
+      ? "taobao"
+      : url.includes("source=AL")
+      ? "1688"
+      : "weidian";
+  } else if (url.includes("cnfans.com")) {
+    match = url.match(/id=(\d+)/);
+    platform = url.includes("shop_type=taobao")
+      ? "taobao"
+      : url.includes("shop_type=ali_1688")
+      ? "1688"
+      : "weidian";
+  } else if (url.includes("orientdig.com")) {
+    match = url.match(/id=(\d+)/);
+    platform = url.includes("shop_type=taobao")
+      ? "taobao"
+      : url.includes("shop_type=ali_1688")
+      ? "1688"
+      : "weidian";
+  }
+  //
+  else if (url.includes("sugargoo.com")) {
+    match = url.match(/productLink=([^&]*)/);
+
+    let decodedLink = decodeURIComponent(match[1]);
+
+    match = decodedLink.match(/itemID=(\d+)/);
+
+    console.log(match, "vool");
+    platform = url.includes("taobao")
+      ? "taobao"
+      : url.includes("1688")
+      ? "1688"
+      : "weidian";
+  }
+  //
+  else if (url.includes("allchinabuy.com")) {
+    match = url.match(/url=.*?(?:itemID%3D|offer%2F|id%3D)(\d+)/);
+    platform = url.includes("taobao")
+      ? "taobao"
+      : url.includes("1688")
+      ? "1688"
+      : "weidian";
+  }
+  id = match ? match[1] : null;
+  console.log(id);
+
+  if (!id) return { id: null, platform: null, rawLink: null };
+
+  if (platform === "taobao")
+    rawLink = `https://item.taobao.com/item.htm?id=${id}`;
+  else if (platform === "1688")
+    rawLink = `https://detail.1688.com/offer/${id}.html`;
+  else rawLink = `https://weidian.com/item.html?itemID=${id}`;
+
+  return { id: id, platform: platform, rawLink: rawLink };
 }
 
-function copyToClipboard(text, button) {
-  navigator.clipboard.writeText(text).then(() => {
-    button.textContent = "Copied!";
-    setTimeout(() => (button.textContent = "Copy"), 1500);
-  });
+function copyToClipboard(button, text) {
+  navigator.clipboard
+    .writeText(text)
+    .then(() => {
+      button.textContent = "Copied!";
+      setTimeout(() => (button.textContent = "Copy"), 1500);
+    })
+    .catch((err) => {
+      console.error("Failed to copy: ", err);
+    });
 }
 
 function convertLink() {
-  let rawLink = document.getElementById("rawLink").value.trim();
-  let itemId = extractItemId(rawLink);
-  let storeType = getStoreType(rawLink);
+  const inputField = document.getElementById("inputLink");
+  const resultDiv = document.getElementById("result");
+  const inputLink = inputField.value.trim();
 
-  if (!itemId || !storeType) {
-    document.getElementById("output").innerHTML = "Invalid link!";
+  if (!inputLink) {
+    alert("Please enter a valid link!");
+    return;
+  }
+  console.log(inputLink);
+  let extracted = extractProductID(inputLink);
+
+  if (!extracted.id) {
+    alert("Invalid link! Could not extract product ID.");
     return;
   }
 
-  let outputHtml = "<h2>Converted Links:</h2>";
-  agents.forEach((agent) => {
-    let link = agent.generateLink(rawLink, itemId, storeType);
-    outputHtml += `
-            <div class="link-container"><strong>${agent.name}: </strong>
-                <span class="link-text"><a href="${link}" target="_blank">${link}</a></span>
-                <button class="copy-btn" onclick="copyToClipboard('${link}', this)">Copy</button>
-            </div>`;
-  });
+  const { id, platform, rawLink } = extracted;
+  const encodedLink = encodeURIComponent(rawLink);
 
-  document.getElementById("output").innerHTML = outputHtml;
+  const agents = {
+    "Raw Link": rawLink,
+    AllChinaBuy: `https://www.allchinabuy.com/en/page/buy?from=search-input&url=${encodedLink}&partnercode=wrf7xD`,
+    AcBuy: `https://www.acbuy.com/product/?id=${id}&source=${
+      platform === "taobao" ? "TB" : platform === "1688" ? "AL" : "WD"
+    }&u=9MLILB`,
+    CNFans: `https://cnfans.com/product/?shop_type=${
+      platform === "taobao"
+        ? "taobao"
+        : platform === "1688"
+        ? "ali_1688"
+        : "weidian"
+    }&id=${id}&ref=71427`,
+    OrientDig: `https://orientdig.com/product/?shop_type=${
+      platform === "taobao"
+        ? "taobao"
+        : platform === "1688"
+        ? "ali_1688"
+        : "weidian"
+    }&id=${id}&ref=100005658`,
+    Sugargoo: `https://www.sugargoo.com/#/home/productDetail?productLink=${encodedLink}&memberId=341947205705269884`,
+  };
+
+  resultDiv.innerHTML = "<h3>Converted Links:</h3><table>";
+  resultDiv.innerHTML += "<tr><th>Agent</th><th>Link</th><th>Copy</th></tr>";
+
+  for (const [agent, link] of Object.entries(agents)) {
+    resultDiv.innerHTML += `
+            <tr>
+                <td><strong>${agent}</strong></td>
+                <td><a href="${link}" target="_blank" class="link-style">${link}</a></td>
+                <td><button class="copy-btn" onclick="copyToClipboard(this, '${link}')">Copy</button></td>
+            </tr>`;
+  }
+
+  resultDiv.innerHTML + resultDiv + "</table>";
 }

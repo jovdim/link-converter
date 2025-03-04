@@ -76,13 +76,13 @@ function extractFromAgent(url) {
   else if (url.includes("allchinabuy.com")) {
     match = url.match(/url=([^&]*)/);
     let decodedLink = decodeURIComponent(match[1]);
-    if (decodedLink.includes("weidian.com/item.html")) {
-      match = decodedLink.match(/itemID=(\d+)/);
+    if (decodedLink.includes("weidian.com")) {
+      match = decodedLink.match(/itemID|itemId=(\d+)/);
       platform = "weidian";
-    } else if (decodedLink.includes("item.taobao.com")) {
+    } else if (decodedLink.includes("taobao.com")) {
       match = decodedLink.match(/id=(\d+)/);
       platform = "taobao";
-    } else if (decodedLink.includes("detail.1688.com/offer")) {
+    } else if (decodedLink.includes("1688.com")) {
       match = decodedLink.match(/offer\/(\d+)\.html/);
       platform = "1688";
     }

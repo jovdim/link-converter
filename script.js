@@ -137,27 +137,35 @@ function convertLink() {
   const { id, platform, rawLink } = extracted;
   const encodedLink = encodeURIComponent(rawLink);
 
+  const affiliateCodes = {
+    AllChinaBuy: "&partnercode=wrf7xD",
+    AcBuy: "&u=9MLILB",
+    CNFans: "&ref=71427",
+    OrientDig: "&ref=100005658",
+    Sugargoo: "&memberId=341947205705269884",
+  };
+
   const agents = {
     "Raw Link": rawLink,
-    AllChinaBuy: `https://www.allchinabuy.com/en/page/buy/?from=search-input&url=${encodedLink}&partnercode=wrf7xD`,
+    AllChinaBuy: `https://www.allchinabuy.com/en/page/buy/?from=search-input&url=${encodedLink}${affiliateCodes.AllChinaBuy}`,
     AcBuy: `https://www.acbuy.com/product/?id=${id}&source=${
       platform === "taobao" ? "TB" : platform === "1688" ? "AL" : "WD"
-    }&u=9MLILB`,
+    }${affiliateCodes.AcBuy}`,
     CNFans: `https://cnfans.com/product/?shop_type=${
       platform === "taobao"
         ? "taobao"
         : platform === "1688"
         ? "ali_1688"
         : "weidian"
-    }&id=${id}&ref=71427`,
+    }&id=${id}${affiliateCodes.CNFans}`,
     OrientDig: `https://orientdig.com/product/?shop_type=${
       platform === "taobao"
         ? "taobao"
         : platform === "1688"
         ? "ali_1688"
         : "weidian"
-    }&id=${id}&ref=100005658`,
-    Sugargoo: `https://www.sugargoo.com/#/home/productDetail?productLink=${encodedLink}&memberId=341947205705269884`,
+    }&id=${id}${affiliateCodes.OrientDig}`,
+    Sugargoo: `https://www.sugargoo.com/#/home/productDetail?productLink=${encodedLink}${affiliateCodes.Sugargoo}`,
   };
 
   resultDiv.innerHTML = "<h3>Converted Links:</h3><table>";

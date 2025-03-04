@@ -66,7 +66,6 @@ function extractFromAgent(url) {
 
     match = decodedLink.match(/itemID=(\d+)/);
 
-    console.log(match, "vool");
     platform = url.includes("taobao")
       ? "taobao"
       : url.includes("1688")
@@ -75,7 +74,19 @@ function extractFromAgent(url) {
   }
   //
   else if (url.includes("allchinabuy.com")) {
-    match = url.match(/url=.*?(?:itemID%3D|offer%2F|id%3D)(\d+)/);
+    match = url.match(/url=([^&]*)/);
+    let decodedLink = decodeURIComponent(match[1]);
+    if (decodedLink.includes("weidian.com/item.html")) {
+      match = decodedLink.match(/itemID=(\d+)/);
+      platform = "weidian";
+    } else if (decodedLink.includes("item.taobao.com")) {
+      match = decodedLink.match(/id=(\d+)/);
+      platform = "taobao";
+    } else if (decodedLink.includes("detail.1688.com/offer")) {
+      match = decodedLink.match(/offer\/(\d+)\.html/);
+      platform = "1688";
+    }
+
     platform = url.includes("taobao")
       ? "taobao"
       : url.includes("1688")
@@ -83,7 +94,6 @@ function extractFromAgent(url) {
       : "weidian";
   }
   id = match ? match[1] : null;
-  console.log(id);
 
   if (!id) return { id: null, platform: null, rawLink: null };
 
@@ -117,7 +127,6 @@ function convertLink() {
     alert("Please enter a valid link!");
     return;
   }
-  console.log(inputLink);
   let extracted = extractProductID(inputLink);
 
   if (!extracted.id) {
@@ -130,7 +139,7 @@ function convertLink() {
 
   const agents = {
     "Raw Link": rawLink,
-    AllChinaBuy: `https://www.allchinabuy.com/en/page/buy?from=search-input&url=${encodedLink}&partnercode=wrf7xD`,
+    AllChinaBuy: `https://www.allchinabuy.com/en/page/buy/?from=search-input&url=${encodedLink}&partnercode=wrf7xD`,
     AcBuy: `https://www.acbuy.com/product/?id=${id}&source=${
       platform === "taobao" ? "TB" : platform === "1688" ? "AL" : "WD"
     }&u=9MLILB`,

@@ -57,9 +57,7 @@ function extractFromAgent(url) {
       : url.includes("shop_type=ali_1688")
       ? "1688"
       : "weidian";
-  }
-  //
-  else if (url.includes("sugargoo.com")) {
+  } else if (url.includes("sugargoo.com")) {
     match = url.match(/productLink=([^&]*)/);
 
     let decodedLink = decodeURIComponent(match[1]);
@@ -71,9 +69,7 @@ function extractFromAgent(url) {
       : url.includes("1688")
       ? "1688"
       : "weidian";
-  }
-  //
-  else if (url.includes("allchinabuy.com")) {
+  } else if (url.includes("allchinabuy.com")) {
     match = url.match(/url=([^&]*)/);
     let decodedLink = decodeURIComponent(match[1]);
     if (decodedLink.includes("weidian.com")) {
@@ -91,6 +87,7 @@ function extractFromAgent(url) {
       : url.includes("1688")
       ? "1688"
       : "weidian";
+  } else if (url.includes("superbuy.com")) {
   }
   id = match ? match[1] : null;
 
@@ -109,8 +106,12 @@ function copyToClipboard(button, text) {
   navigator.clipboard
     .writeText(text)
     .then(() => {
-      button.textContent = "Copied!";
-      setTimeout(() => (button.textContent = "Copy"), 1500);
+      button.innerHTML =
+        '<img class="btn-img" src="./agent-images/copied-icon.png" alt="copied icon">';
+      setTimeout(() => {
+        button.innerHTML =
+          '<img class="btn-img" src="./agent-images/copy-icon.png" alt="copy icon">';
+      }, 1500);
     })
     .catch((err) => {
       console.error("Failed to copy: ", err);
@@ -145,39 +146,73 @@ function convertLink() {
   };
 
   const agents = {
-    "Raw Link": rawLink,
-    AllChinaBuy: `https://www.allchinabuy.com/en/page/buy/?from=search-input&url=${encodedLink}${affiliateCodes.AllChinaBuy}`,
-    AcBuy: `https://www.acbuy.com/product/?id=${id}&source=${
-      platform === "taobao" ? "TB" : platform === "1688" ? "AL" : "WD"
-    }${affiliateCodes.AcBuy}`,
-    CNFans: `https://cnfans.com/product/?shop_type=${
-      platform === "taobao"
-        ? "taobao"
-        : platform === "1688"
-        ? "ali_1688"
-        : "weidian"
-    }&id=${id}${affiliateCodes.CNFans}`,
-    OrientDig: `https://orientdig.com/product/?shop_type=${
-      platform === "taobao"
-        ? "taobao"
-        : platform === "1688"
-        ? "ali_1688"
-        : "weidian"
-    }&id=${id}${affiliateCodes.OrientDig}`,
-    Sugargoo: `https://www.sugargoo.com/#/home/productDetail?productLink=${encodedLink}${affiliateCodes.Sugargoo}`,
+    "Raw Link": {
+      link: rawLink,
+    },
+    AllChinaBuy: {
+      link: `https://www.allchinabuy.com/en/page/buy/?from=search-input&url=${encodedLink}${affiliateCodes.AllChinaBuy}`,
+      logo: "./agent-images/allchinabuy.webp",
+    },
+    AcBuy: {
+      link: `https://www.acbuy.com/product/?id=${id}&source=${
+        platform === "taobao" ? "TB" : platform === "1688" ? "AL" : "WD"
+      }${affiliateCodes.AcBuy}`,
+      logo: "./agent-images/acbuy.webp",
+    },
+    CNFans: {
+      link: `https://cnfans.com/product/?shop_type=${
+        platform === "taobao"
+          ? "taobao"
+          : platform === "1688"
+          ? "ali_1688"
+          : "weidian"
+      }&id=${id}${affiliateCodes.CNFans}`,
+      logo: "./agent-images/cnfans.webp",
+    },
+    OrientDig: {
+      link: `https://orientdig.com/product/?shop_type=${
+        platform === "taobao"
+          ? "taobao"
+          : platform === "1688"
+          ? "ali_1688"
+          : "weidian"
+      }&id=${id}${affiliateCodes.OrientDig}`,
+      logo: "./agent-images/orientdig.webp",
+    },
+    Sugargoo: {
+      link: `https://www.sugargoo.com/#/home/productDetail?productLink=${encodedLink}${affiliateCodes.Sugargoo}`,
+      logo: "./agent-images/sugargoo.webp",
+    },
   };
 
-  resultDiv.innerHTML = "<h3>Converted Links:</h3><table>";
-  resultDiv.innerHTML += "<tr><th>Agent</th><th>Link</th><th>Copy</th></tr>";
+  let listHTML = "<ul>"; // Start the <ul>
 
-  for (const [agent, link] of Object.entries(agents)) {
-    resultDiv.innerHTML += `
-            <tr>
-                <td><strong>${agent}</strong></td>
-                <td><a href="${link}" target="_blank" class="link-style">${link}</a></td>
-                <td><button class="copy-btn" onclick="copyToClipboard(this, '${link}')">Copy</button></td>
-            </tr>`;
+  for (const [agentName, agent] of Object.entries(agents)) {
+    listHTML += `
+    <li>
+      <div class="agent-logo-link">
+      
+         
+            ${
+              agentName === "Raw Link"
+                ? '<p class="raw-title">RAW</p>'
+                : `<img class="agent-logo" src="${agent.logo}" alt="${agentName} logo">`
+            }
+         
+       
+        <a href="${agent.link}" target="_blank" class="link-style">${
+      agent.link
+    }</a>
+      </div>
+      <button class="copy-btn" onclick="copyToClipboard(this, '${
+        agent.link
+      }')"><img class="btn-img" src="./agent-images/copy-icon.png" alt="copy icon" ></button>
+    </li>
+  `;
   }
 
-  resultDiv.innerHTML + resultDiv + "</table>";
+  listHTML += "</ul>"; // Close the <ul>
+
+  // Assign the final complete HTML to resultDiv
+  resultDiv.innerHTML = listHTML;
 }

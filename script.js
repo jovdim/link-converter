@@ -167,10 +167,10 @@ function copyToClipboard(button, text) {
     .writeText(text)
     .then(() => {
       button.innerHTML =
-        '<img class="btn-img" src="./agent-images/copied-icon.png" alt="copied icon">';
+        '<img class="btn-img" src="./images/copy-icons/copied-icon.png" alt="copied icon">';
       setTimeout(() => {
         button.innerHTML =
-          '<img class="btn-img" src="./agent-images/copy-icon.png" alt="copy icon">';
+          '<img class="btn-img" src="./images/copy-icons/copy-icon.png" alt="copy icon">';
       }, 1500);
     })
     .catch((err) => {
@@ -216,13 +216,13 @@ function convertLink() {
     },
     AllChinaBuy: {
       link: `https://www.allchinabuy.com/en/page/buy/?from=search-input&url=${encodedLink}${affiliateCodes.AllChinaBuy}`,
-      logo: "./agent-images/allchinabuy.webp",
+      logo: "./images/agent-images/allchinabuy.webp",
     },
     AcBuy: {
       link: `https://www.acbuy.com/product/?id=${id}&source=${
         platform === "taobao" ? "TB" : platform === "1688" ? "AL" : "WD"
       }${affiliateCodes.AcBuy}`,
-      logo: "./agent-images/acbuy.webp",
+      logo: "./images/agent-images/acbuy.webp",
     },
     CNFans: {
       link: `https://cnfans.com/product/?shop_type=${
@@ -232,7 +232,7 @@ function convertLink() {
           ? "ali_1688"
           : "weidian"
       }&id=${id}${affiliateCodes.CNFans}`,
-      logo: "./agent-images/cnfans.webp",
+      logo: "./images/agent-images/cnfans.webp",
     },
     OrientDig: {
       link: `https://orientdig.com/product/?shop_type=${
@@ -242,15 +242,15 @@ function convertLink() {
           ? "ali_1688"
           : "weidian"
       }&id=${id}${affiliateCodes.OrientDig}`,
-      logo: "./agent-images/orientdig.webp",
+      logo: "./images/agent-images/orientdig.webp",
     },
     Sugargoo: {
       link: `https://www.sugargoo.com/#/home/productDetail?productLink=${encodedLink}${affiliateCodes.Sugargoo}`,
-      logo: "./agent-images/sugargoo.webp",
+      logo: "./images/agent-images/sugargoo.webp",
     },
     Superbuy: {
       link: `https://www.superbuy.com/en/page/buy?from=search-input&url=${encodedLink}${affiliateCodes.Superbuy}`,
-      logo: "./agent-images/superbuy.webp",
+      logo: "./images/agent-images/superbuy.webp",
     },
     Mulebuy: {
       link: `https://mulebuy.com/product/?shop_type=${
@@ -260,13 +260,13 @@ function convertLink() {
           ? "ali_1688"
           : "weidian"
       }&id=${id}${affiliateCodes.Mulebuy}`,
-      logo: "./agent-images/mulebuy.webp",
+      logo: "./images/agent-images/mulebuy.webp",
     },
     Hoobuy: {
       link: `https://www.hoobuy.com/product/${
         platform === "taobao" ? "1" : platform === "1688" ? "0" : "2"
       }/${id}${affiliateCodes.Hoobuy}`,
-      logo: "./agent-images/hoobuy.webp",
+      logo: "./images/agent-images/hoobuy.webp",
     },
     Oopbuy: {
       link: `https://www.oopbuy.com/product/${
@@ -278,11 +278,11 @@ function convertLink() {
           ? "weidian"
           : "2"
       }/${id}${affiliateCodes.Oopbuy}`,
-      logo: "./agent-images/oopbuy.webp",
+      logo: "./images/agent-images/oopbuy.webp",
     },
     Kakobuy: {
       link: `https://www.kakobuy.com/item/details?url=${encodedLink}${affiliateCodes.Kakobuy}`,
-      logo: "./agent-images/kakobuy.webp",
+      logo: "./images/agent-images/kakobuy.webp",
     },
   };
 
@@ -302,7 +302,7 @@ function convertLink() {
     }</a>
       </div>
       <button class="copy-btn" onclick="copyToClipboard(this, '${agent.link}')">
-        <img class="btn-img" src="./agent-images/copy-icon.png" alt="copy icon">
+        <img class="btn-img" src="./images/copy-icons/copy-icon.png" alt="copy icon">
       </button>
     </li>
   `;

@@ -31,10 +31,9 @@ body {
 input {
   padding: 10px;
   height: 50px;
-
   border-radius: 12px;
   border: none;
-  color: white; /* Ensures text is visible */
+  color: white;
   background-color: #1c1c1c9f;
   border: solid 1px rgba(255, 255, 255, 0.219);
 }
@@ -47,7 +46,13 @@ input {
   background-color: #48563a;
   border: none;
   font-weight: bold;
-  white-space: nowrap; /* Prevents button text from wrapping */
+  white-space: nowrap;
+}
+.convert-btn:hover {
+  background-color: #5e724a;
+}
+.convert-btn:active {
+  background-color: #759c4d;
 }
 
 .link-style {
@@ -68,6 +73,14 @@ input {
   padding: 4px;
   text-align: center;
 }
+.copy-btn:hover {
+  background-color: #5e724a;
+}
+
+.copy-btn:active {
+  background-color: #759c4d;
+}
+
 .btn-img {
   width: 25px;
   height: 25px;
@@ -120,8 +133,28 @@ li a {
   border-radius: 12px;
 }
 
+.separator {
+  margin: 60px auto;
+  width: 80%;
+  height: 1px;
+  background-color: #dbd7d769;
+}
+
+.social-icons-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  font-size: 12px;
+}
+
+.social-icon {
+  width: 30px;
+  height: 30px;
+}
+
 @media (max-width: 600px) {
   .container {
-    padding: 10px; /* Reduce padding for mobile */
+    padding: 10px;
   }
 }
